@@ -1,0 +1,16 @@
+{
+  "name": "notification-initiator",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
+    "cdk": "cdk",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^30"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.256.1",
+    "constructs": "^10.5.0"
+  }
+}
