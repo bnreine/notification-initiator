@@ -5,5 +5,6 @@ export async function runDailyNotifications() {
     // dynamodb
     // postgres
 
-    console.log("done");
+
+
 }
