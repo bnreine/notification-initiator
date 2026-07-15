@@ -32,6 +32,7 @@ export const connectDB = async () => {
         }
     });
 
+
     try {
         await dbPool.query('SELECT 1');
         console.log('Database connected');
