@@ -1,6 +1,6 @@
-import {connectDB} from './connect-db.js'
-import {getDbPool} from './connect-db'
-import {last, size} from 'lodash'
+import {connectDB, getDbPool} from './connect-db.js'
+import lodash from 'lodash'
+const {last, size} = lodash
 
 const getConfigs = async ({lastId }) => {
     const dbPool = getDbPool();
