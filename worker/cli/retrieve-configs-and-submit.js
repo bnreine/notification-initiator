@@ -1,10 +1,17 @@
 import {connectDB, getDbPool} from './connect-db.js'
 import lodash from 'lodash'
+
+import {
+    SQSClient,
+    SendMessageBatchCommand,
+} from "@aws-sdk/client-sqs";
 const {last, size} = lodash
+
+const sqs = new SQSClient({ region: "us-east-1" });
 
 const getConfigs = async ({lastId }) => {
     const dbPool = getDbPool();
-    const limit = 1
+    const limit = 1000
 
     let queryString = `select * from  "NotificationConfig" order by "Id" limit $1`
     let bindings = [limit]
@@ -23,6 +30,26 @@ const getConfigs = async ({lastId }) => {
     return {lastId: newLastId, continuePaginating: newContinuePaginating, rows};
 }
 
+
+const sendMessages = async (messages)=>{
+    const chunkSize = 10
+    for (let i=0; i < messages.length; i+=chunkSize){
+        const chunk = messages.slice(i, i + chunkSize);
+        await sqs.send(
+            new SendMessageBatchCommand({
+                QueueUrl: process.env.GENERATOR_QUEUE_URL,
+                Entries: chunk.map((msg, idx) => ({
+                    Id: `${i + idx}`,
+                    MessageBody: JSON.stringify(msg),
+                })),
+            })
+        )
+
+
+    }
+
+}
+
 export async function retrieveConfigsAndSubmit() {
     try {
         console.log("starting");
@@ -33,7 +60,11 @@ export async function retrieveConfigsAndSubmit() {
         let newContinuePaginating = continuePaginating
 
         console.log('rows: ', size(rows))
-        // submit the batch messages to sqs
+
+        await sendMessages(rows)
+        console.log('send success')
+
+
 
         while(newContinuePaginating) {
             const {lastId, continuePaginating, rows} = await getConfigs({lastId: newLastId, continuePaginating: newContinuePaginating});
@@ -41,7 +72,10 @@ export async function retrieveConfigsAndSubmit() {
             newContinuePaginating = continuePaginating
 
             console.log('rows: ', size(rows))
-            // submit the batch messages to sqs
+
+            await sendMessages(rows)
+            console.log('send success')
+
         }
 
     } catch (err) {
