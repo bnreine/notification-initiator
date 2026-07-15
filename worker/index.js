@@ -1,8 +1,6 @@
-// cli/runDailyNotifications.ts
+import { retrieveConfigsAndSubmit } from "./cli/retrieve-configs-and-submit.js";
 
-import { runDailyNotifications } from "./cli/run-daily-notifications.js";
-
-runDailyNotifications()
+retrieveConfigsAndSubmit()
     .then(() => process.exit(0))
     .catch((err) => {
         console.error(err);
