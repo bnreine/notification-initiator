@@ -19,6 +19,7 @@ const getConfigs = async ({lastId }) => {
         queryString = `select * from  "NotificationConfig" where "enabled" = true and "Id" > $1 order by "Id" limit $2`
         bindings = [lastId, limit]
     }
+
     const response = await dbPool.query(queryString, bindings);
     const rows = response?.rows || [];
 
