@@ -13,10 +13,10 @@ const getConfigs = async ({lastId }) => {
     const dbPool = getDbPool();
     const limit = 1000
 
-    let queryString = `select * from  "NotificationConfig" order by "Id" limit $1`
+    let queryString = `select * from  "NotificationConfig" where "enabled" = true order by "Id" limit $1`
     let bindings = [limit]
     if(lastId) {
-        queryString = `select * from  "NotificationConfig" where "Id" > $1 order by "Id" limit $2`
+        queryString = `select * from  "NotificationConfig" where "enabled" = true and "Id" > $1 order by "Id" limit $2`
         bindings = [lastId, limit]
     }
     const response = await dbPool.query(queryString, bindings);
