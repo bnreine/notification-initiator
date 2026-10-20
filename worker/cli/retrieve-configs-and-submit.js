@@ -7,6 +7,7 @@ import {
 } from "@aws-sdk/client-sqs";
 const {last, size} = lodash
 
+
 const sqs = new SQSClient({ region: "us-east-1" });
 
 const getConfigs = async ({lastId }) => {
