@@ -4,6 +4,10 @@ import {
     GetSecretValueCommand,
 } from '@aws-sdk/client-secrets-manager'
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const Pool = pg.Pool
 
